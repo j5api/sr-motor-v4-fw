@@ -1,6 +1,6 @@
 FW_VER=3
 
-TOOLCHAIN_DIR = ./libopencm3
+TOOLCHAIN_DIR ?= ./libopencm3
 PREFIX = arm-none-eabi
 CC = $(PREFIX)-gcc
 LD = $(PREFIX)-gcc
