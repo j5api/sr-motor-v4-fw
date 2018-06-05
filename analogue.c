@@ -52,10 +52,17 @@ void analogue_init(void) {
 	adc_enable_external_trigger_injected(ADC1, ADC_CR2_JEXTSEL_TIM1_TRGO);
 	adc_enable_scan_mode(ADC1);
 	adc_enable_eoc_interrupt(ADC1);
+	adc_enable_eoc_interrupt_injected(ADC1);
 
 	adc_power_on(ADC1);
 
+	/**
+	 * M0Cs - Channel 10
+	 * M1Cs - Channel 13
+	 */
+
 	uint8_t channel[] = {9, 10, 11, 12};
+
 	adc_set_injected_sequence(ADC1, 4, channel);
 
 	/* Wait for things to warm up */
@@ -63,6 +70,11 @@ void analogue_init(void) {
 		__asm__("nop");
 	adc_reset_calibration(ADC1);
 	adc_calibration(ADC1);
+}
+
+void trigger_conversion(void){
+	// Start a conversion on the channels defined on lines 58.
+	adc_start_conversion_injected();
 }
 
 void adc1_2_isr(void) {
