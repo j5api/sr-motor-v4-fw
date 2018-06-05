@@ -23,7 +23,7 @@ void init(void) {
 	led_init();
 	output_init();
 	usart_init();
-	//analogue_init();
+	analogue_init();
 
 	led_set(LED_M0_R);
 }
