@@ -58,7 +58,9 @@ void set_output(int channel, int8_t i) {
 typedef enum {
 	STATE_INIT,
 	STATE_SPEED0,
-	STATE_SPEED1
+	STATE_SPEED1,
+	STATE_MEASURE0,
+	STATE_MEASURE1
 } state_t;
 
 void fsm(int c) {
@@ -84,6 +86,12 @@ void fsm(int c) {
 				case -124:
 					enter_bootloader();
 					break;
+				case -123:
+					state = STATE_MEASURE0;
+					break; // <-- This kills the crab.
+				case -122:
+					state = STATE_MEASURE1;
+					break; // <-- This (also) kills the crab.
 				default:
 					state = STATE_INIT;
 					break;
@@ -101,6 +109,13 @@ void fsm(int c) {
 				set_output(1, i);
 			}
 			break;
+		case STATE_MEASURE0:
+			state = STATE_INIT;
+			break;
+		case STATE_MEASURE1:
+			state = STATE_INIT;
+			break;
+
 		default:
 			state = STATE_INIT;
 			break;
@@ -122,6 +137,7 @@ int main(void) {
 
 	while (1) {
 		int c = usart_get_char();
+		trigger_conversion();
 		fsm(c);
 	}
 
