@@ -14,6 +14,11 @@
 #include <libopencm3/stm32/dbgmcu.h>
 
 
+volatile uint32_t motor_one_speed;
+volatile uint32_t motor_two_speed;
+bool latest_read = false;
+
+
 void analogue_init(void) {
 	gpio_set_mode(GPIOB, GPIO_MODE_INPUT, GPIO_CNF_INPUT_ANALOG, GPIO1); /* 12V */
 	gpio_set_mode(GPIOC, GPIO_MODE_INPUT, GPIO_CNF_INPUT_ANALOG, GPIO0); /* M0 CS */
@@ -62,11 +67,11 @@ void analogue_init(void) {
 	 * M1Cs - Channel 13
 	 */
 
-    uint8_t channel[] = {9, 10, 13, 12};
+    uint8_t channel[] = {10, 13};
 
 	//uint8_t channel[] = {9, 10, 11, 12};
 
-	adc_set_injected_sequence(ADC1, 4, channel);
+	adc_set_injected_sequence(ADC1, 2, channel);
 
 	/* Wait for things to warm up */
 	for (int i=0; i<100000; i++)
@@ -85,4 +90,6 @@ void adc1_2_isr(void) {
 	ADC1_SR = 0;
 	motor_one_speed = adc_read_injected(ADC1, 2);
     motor_two_speed = adc_read_injected(ADC1, 3);
+
+    latest_read = true;
 }
