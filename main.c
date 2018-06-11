@@ -88,10 +88,10 @@ void fsm(int c) {
 					break;
 				case -123:
 					state = STATE_MEASURE0;
-					break; // <-- This kills the crab.
+					break;
 				case -122:
 					state = STATE_MEASURE1;
-					break; // <-- This (also) kills the crab.
+					break;
 				default:
 					state = STATE_INIT;
 					break;
