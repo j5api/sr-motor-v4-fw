@@ -18,18 +18,32 @@ volatile uint32_t motor_one_speed;
 volatile uint32_t motor_two_speed;
 bool latest_read = false;
 
+/**
+ * Interrupt service routine, triggered on the completion
+ * of the ADC conversion on injected channels.
+ */
+void adc1_2_isr(void) {
+    led_toggle(LED_M0_B);
+    ADC1_SR = 0;
+    motor_one_speed = adc_read_injected(ADC1, 2);
+    motor_two_speed = adc_read_injected(ADC1, 3);
+    latest_read = true;
+}
 
 void analogue_init(void) {
     setup_gpio();
 	setup_nvic();
 	setup_timers();
 	setup_adc();
+	settle_down();
+}
 
-	/* Wait for things to warm up */
-	for (int i=0; i<100000; i++)
-		__asm__("nop");
-	adc_reset_calibration(ADC1);
-	adc_calibration(ADC1);
+void settle_down(){
+    /* Wait for things to warm up */
+    for (int i=0; i<100000; i++)
+            __asm__("nop");
+    adc_reset_calibration(ADC1);
+    adc_calibration(ADC1);
 }
 
 void setup_gpio(void){
@@ -64,6 +78,7 @@ void setup_adc(void){
     adc_power_on(ADC1);
 
     /**
+
      * M0Cs - Channel 10
      * M1Cs - Channel 13
      */
@@ -97,13 +112,4 @@ void setup_timers(void){
 void trigger_conversion(void){
 	// Start a conversion on the channels defined on lines 58.
 	adc_start_conversion_injected(ADC1);
-}
-
-void adc1_2_isr(void) {
-	led_toggle(LED_M0_R);
-	ADC1_SR = 0;
-	motor_one_speed = adc_read_injected(ADC1, 2);
-    motor_two_speed = adc_read_injected(ADC1, 3);
-
-    latest_read = true;
 }
