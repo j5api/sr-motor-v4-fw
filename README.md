@@ -36,7 +36,7 @@ Instructions
 
 5. Connect the motor board to your machine via USB. The USB Power Light (green, next to the connector) should turn on.
 
-6. Connect the motor board to a power source. The main power light (green, in the middle of the board) should turn on. If using the SR power board, you will have to run a program to turn on the motor rail.
+6. Connect the motor board to a power source and plug in a USB with valid robot code into the pi (or execute a script directly). This will turn on the power board outputs and the main power light (Green in the middle of the board should turn on).
 
 7. Press the firmware button on the side of the motor board with a long thin object.
 
